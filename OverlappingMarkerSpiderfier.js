@@ -10,7 +10,7 @@ var _ref,
   __slice = [].slice;
 
 if (((_ref = this['google']) != null ? _ref['maps'] : void 0) == null) {
-  return null;
+  return;
 }
 
 this['OverlappingMarkerSpiderfier'] = (function() {
@@ -442,7 +442,7 @@ this['OverlappingMarkerSpiderfier'] = (function() {
           };
         }
         marker.setPosition(footLl);
-        marker.setZIndex(Math.round(this['spiderfiedZIndex'] + footPt.y));
+
         _results.push(marker);
       }
       return _results;
@@ -471,7 +471,7 @@ this['OverlappingMarkerSpiderfier'] = (function() {
         if (marker !== markerNotToMove) {
           marker.setPosition(marker['_omsData'].usualPosition);
         }
-        marker.setZIndex(null);
+
         listeners = marker['_omsData'].hightlightListeners;
         if (listeners != null) {
           ge.removeListener(listeners.highlight);
