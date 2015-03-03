@@ -22,7 +22,7 @@ Update the Git tag
 
     cat bower.json
         ...
-        "overlappingmarkerspiderfier": "https://github.com/blackline/OverlappingMarkerSpiderfier.git#1.0.6",
+        "overlapping-marker-spiderfier": "https://github.com/blackline/overlapping-marker-spiderfier.git#1.0.6",
         ...
 
     # Don't forget to update the dependencies
