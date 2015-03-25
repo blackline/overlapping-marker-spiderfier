@@ -239,7 +239,7 @@ this['OverlappingMarkerSpiderfier'] = (function() {
     return _results;
   };
 
-  p.spiderListener = function(marker, event) {
+p.spiderListener = function(marker, event) {
     var m, mPt, markerPt, markerSpiderfied, nDist, nearbyMarkerData, nonNearbyMarkers, pxSq, _j, _len1, _ref2;
     markerSpiderfied = marker['_omsData'] != null;
 
@@ -248,39 +248,53 @@ this['OverlappingMarkerSpiderfier'] = (function() {
     }
 
     if (!(markerSpiderfied && this['keepSpiderfied'])) {
-      this['unspiderfy']();
+        this['unspiderfy']();
     }
+
     if (markerSpiderfied || this.map.getStreetView().getVisible() || this.map.getMapTypeId() === 'GoogleEarthAPI') {
-      return this.trigger('click', marker, event);
-    } else {
-      nearbyMarkerData = [];
-      nonNearbyMarkers = [];
-      nDist = this['nearbyDistance'];
-      pxSq = nDist * nDist;
-      markerPt = this.llToPt(marker.position);
-      _ref2 = this.markers;
-      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-        m = _ref2[_j];
-        if (!((m.map != null) && m.getVisible())) {
-          continue;
-        }
-        mPt = this.llToPt(m.position);
-        if (this.ptDistanceSq(mPt, markerPt) < pxSq) {
-          nearbyMarkerData.push({
-            marker: m,
-            markerPt: mPt
-          });
-        } else {
-          nonNearbyMarkers.push(m);
-        }
-      }
-      if (nearbyMarkerData.length === 1) {
         return this.trigger('click', marker, event);
-      } else {
-        return this.spiderfy(nearbyMarkerData, nonNearbyMarkers);
-      }
+    } else {
+        nearbyMarkerData = [];
+        nonNearbyMarkers = [];
+        nDist = this['nearbyDistance'];
+        pxSq = nDist * nDist;
+        markerPt = this.llToPt(marker.position);
+
+        var group = this.parent.isMarkerInExistingGroup(marker);
+        if (!_.isNull(group)) {
+            var groupedMarkers = group.allMarkers;
+            for (i = 0; i < groupedMarkers.length; i++) {
+                m = groupedMarkers[i];
+
+                if (!((m.map != null) && m.getVisible())) {
+                    continue;
+                }
+
+                mPt = this.llToPt(m.position);
+                nearbyMarkerData.push({
+                    marker: m,
+                    markerPt: mPt
+                });
+            }
+        }
+
+        _ref2 = _.difference(this.markers, groupedMarkers);
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+            m = _ref2[_j];
+            if (!((m.map != null) && m.getVisible())) {
+                continue;
+            }
+
+            nonNearbyMarkers.push(m);
+        }
+
+        if (nearbyMarkerData.length === 1) {
+            return this.trigger('click', marker, event);
+        } else {
+            return this.spiderfy(nearbyMarkerData, nonNearbyMarkers);
+        }
     }
-  };
+};
 
   p['markersNearMarker'] = function(marker, firstOnly) {
     var m, mPt, markerPt, markers, nDist, pxSq, _j, _len1, _ref2, _ref3, _ref4;
