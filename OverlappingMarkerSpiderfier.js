@@ -288,7 +288,7 @@ p.spiderListener = function(marker, event) {
             nonNearbyMarkers.push(m);
         }
 
-        if (nearbyMarkerData.length === 1) {
+        if (nearbyMarkerData.length <= 1) {
             return this.trigger('click', marker, event);
         } else {
             return this.spiderfy(nearbyMarkerData, nonNearbyMarkers);
